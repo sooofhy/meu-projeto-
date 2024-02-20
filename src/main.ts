@@ -9,69 +9,74 @@ app.get('/',(req, res) => {
     res.send ('Bem vindo a API')
 })
 
-app.post('/usuarios', async(req, res) =>{
+app.post('/formulario', async(req, res) =>{
     const nome = req.body.nome; 
-    const email = req.body.email
-    const telefone = req.body.telefone
+    const email = req.body.email;
+    const telefone = req.body.telefone;
+    const descricao = req.body.descricao;
     try {
-        const docRef = await firestore.addDoc(firestore.collection(db, 'usuarios'),{
+        const docRef = await firestore.addDoc(firestore.collection(db, 'formulario'),{
             nome: nome, 
             email: email,
-            telefone: telefone 
+            telefone: telefone,
+            descricao: descricao,
+            
         })
 
-        res.send("Usuario adicionado com sucesso" + docRef.id)
+        res.send("Resposta enviada com sucesso: " + docRef.id)
     } catch (e) {
-        console.log(e)
+        console.log("Erro ao enviar resposta: ",e)
         res.status(500).send(e)
     }
 });
 
-app.get('/listarUsuarios', async (req, res) =>{
+app.get('/listarFormulario', async (req, res) =>{
     try {
-        const usuarios = await firestore.getDocs(firestore.collection(db, 'usuarios'))
+        const formulario = await firestore.getDocs(firestore.collection(db, 'formulario'))
 
-        const usuariosLista = usuarios.docs.map((doc) => ({
+        const formularioLista = formulario.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
         }))
     
-        res.send(usuariosLista)
+        res.send(formularioLista)
     } catch (e) {
-        console.log('Erro ao listar o usuario: ' + e)
+        console.log('Erro ao listar o formulario: ' + e)
 
-        res.status(500).send("Erro ao listar usuario: " + e)
+        res.status(500).send("Erro ao listar formulario: " + e)
     }
 })
 
-app.put('/atualizarUsuarios/:id', async (req, res) => {
+app.put('/atualizarFormulario/:id', async (req, res) => {
     const id = req.params.id
     const nome = req.body.nome
 
     try {
-        await firestore.updateDoc(firestore.doc(db,'usuarios',id), {
+        await firestore.updateDoc(firestore.doc(db,'formulario',id), {
             nome: nome,
         })
-        res.send('Usuario Atualizado com Sucesso!')
+        res.send('Formulario Atualizado com Sucesso!')
     } catch (e) {
-        console.log('Erro ao Atualizar Usuario' + e)
+        console.log('Erro ao Atualizar Formulario' + e)
 
-        res.status(500).send('Erro ao Atualuzar Usuario' + e)
+        res.status(500).send('Erro ao Atualuzar Formulario' + e)
     }
-app.delete('/deletarUsuario/:id', async (req, res) =>{
+})
+
+app.delete('/deletarFormulario/:id', async (req, res) =>{
     const id = req.params.id
 
     try {
-        await firestore.deleteDoc(firestore.doc(db, 'usuarios', id))
-        res.send('Usuário deletado com sucesso!')
+        await firestore.deleteDoc(firestore.doc(db, 'formulario', id))
+        res.send('Formulario deletado com sucesso!')
     } catch (e) {
-        console.log('Erro ao deletar usuario: ' + e)
+        console.log('Erro ao deletar Formulario: ' + e)
 
-        res.status(500).send('Erro ao deletar usuarios: ' + e)
+        res.status(500).send('Erro ao deletar Formulario: ' + e)
     }
 })
   
     
 app.listen(3000,function (){
-    console.log('Serviço Rodando em http://localhost:3000/usuarios')
+    console.log('Serviço Rodando em http://localhost:3000/formulario')
 })
