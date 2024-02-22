@@ -17,14 +17,14 @@ app.get('/',(req, res) => {
 
 app.post('/formulario', async(req, res) =>{
     const nome = req.body.nome; 
-    const email = req.body.email;
     const telefone = req.body.telefone;
+    const email = req.body.email;
     const descricao = req.body.descricao;
     try {
         const docRef = await firestore.addDoc(firestore.collection(db, 'formulario'),{
             nome: nome, 
-            email: email,
             telefone: telefone,
+            email: email,
             descricao: descricao,
             
         })
